@@ -131,6 +131,12 @@ public class CategoryMain implements Serializable {
 	
 	
 
+	public byte getActive() {
+		return active;
+	}
+
+
+
 	public Loja getLoja() {
 		return loja;
 	}

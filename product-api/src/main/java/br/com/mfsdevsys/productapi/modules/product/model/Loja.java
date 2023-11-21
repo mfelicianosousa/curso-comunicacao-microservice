@@ -29,16 +29,16 @@ public class Loja implements Serializable {
 	@Column(name="FANTASY", length = 50, nullable = true)
 	private String fantasy;
 	
-	@Column(name="CNPJ", length = 14, nullable = true)
+	@Column(name="CNPJ", length = 18, nullable = true)
 	private String cnpj;
 	
 	@Column(name="INSC_ESTADUAL", length = 15, nullable = true)
 	private String insc_estadual;
 	
-	@Column(name="EMAIL", length = 15, nullable = true)
+	@Column(name="EMAIL", length = 60, nullable = true)
 	private String email;
 	
-	@Column(name="PHONE", length = 14, nullable = true)
+	@Column(name="PHONE", length = 15, nullable = true)
 	private String phone;
 	
 	@Column(name="PHONE_CELULAR", length = 14, nullable = true)
@@ -50,7 +50,7 @@ public class Loja implements Serializable {
 	@Column(name="BAIRRO", length = 2, nullable = true)
 	private String bairro;
 	
-	@Column(name="MUNICIPIO", length = 2, nullable = true)
+	@Column(name="MUNICIPIO", length = 40, nullable = true)
 	private String municipio;
 	
 	@Column(name="LOGRADOURO", length = 80, nullable = true)
