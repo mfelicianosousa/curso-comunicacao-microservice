@@ -6,6 +6,28 @@ spring:
   Application:
     name: product-api
     
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
-
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5435/product-db
+    username: admin
+    password: 123456
+    mode: always
+    initialize: true
+    spring.sql.init.continue-on-error: true
+    spring.sql.init.platform: postgresql
+    maxActive: 3
+    
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+      format_sql: true
+    show_sql: true
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        
+      
+      
+  
+  
