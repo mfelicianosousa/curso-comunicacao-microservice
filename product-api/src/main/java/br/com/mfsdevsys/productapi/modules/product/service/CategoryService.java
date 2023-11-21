@@ -2,8 +2,8 @@ package br.com.mfsdevsys.productapi.modules.product.service;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,17 +16,18 @@ import br.com.mfsdevsys.productapi.modules.product.dto.CategoryDtoRequest;
 import br.com.mfsdevsys.productapi.modules.product.dto.CategoryDtoResponse;
 import br.com.mfsdevsys.productapi.modules.product.model.Category;
 import br.com.mfsdevsys.productapi.modules.product.repository.CategoryRepository;
+import br.com.mfsdevsys.productapi.modules.product.service.exceptions.EntityNotFoundException;
 
 @Service
 public class CategoryService {
 	
 	@Autowired
-	private CategoryRepository categoryRepository;
+	private CategoryRepository repository;
 	
 	
 	@Transactional(readOnly = true)
 	public List<CategoryDTO> findAll(){
-		List<Category> list = categoryRepository.findAll();
+		List<Category> list = repository.findAll();
 		
 		
 		/* Retornando uma lista
@@ -46,7 +47,7 @@ public class CategoryService {
 		
 		validateCategoryNameInformed( request );
 		
-		var category = categoryRepository.save(Category.of(request));
+		var category = repository.save(Category.of(request));
 		
 		return CategoryDtoResponse.of( category );
 	}
@@ -59,5 +60,16 @@ public class CategoryService {
 		}
 		
 	}
+
+	@Transactional(readOnly = true)
+	public CategoryDTO findById(Integer id) {
+		
+		Optional<Category> obj = repository.findById( id );
+		Category entity = obj.orElseThrow(() -> new EntityNotFoundException("Entidade não encontrada"));
+		
+		return new CategoryDTO( entity );
+	}
+	
+	
 
 }
