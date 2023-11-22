@@ -1,7 +1,13 @@
 package br.com.mfsdevsys.productapi.modules.product.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,13 +15,18 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 @Entity
 @Table(name="PRODUCT")
-public class Product {
-	
+public class Product implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Integer id;
@@ -23,7 +34,7 @@ public class Product {
 	@Column(name="NAME", nullable = false)
 	private String name;
 	
-	@Column(name="DESCRIPTION", nullable = true)
+	@Column(name="DESCRIPTION", columnDefinition="TEXT", nullable = true)
 	private String description;
 	
 	@Column(name="META_LINK", nullable = false)
@@ -36,7 +47,9 @@ public class Product {
 	private byte control_stock;
 	private Double sale_price;
 	private Integer quantityAvailable;
-	
+	private String imgURL;
+	private byte active;
+	/*
 	@ManyToOne
 	@JoinColumn(name="BRAND_ID", nullable= false)
 	private Brand brand;
@@ -46,31 +59,41 @@ public class Product {
 	private Supplier supplier;
 	
 	@ManyToOne
-	@JoinColumn(name="CATEGORY_ID", nullable= false)
-	private Category category;
-	
-	@ManyToOne
 	@JoinColumn(name="LOJA_ID", nullable= true)
 	private Loja loja;
 	
-	private byte active;
+	*/
+	
+	
+	//, columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")	
+	
+	@ManyToMany
+	@JoinTable(name = "PRODUCT_CATEGORY", 
+	  joinColumns = @JoinColumn(name="product_id"),
+	  inverseJoinColumns = @JoinColumn(name="category_id"))
+	Set<Category> categories = new HashSet<>();	
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@CreationTimestamp
+	@Column(name="CREATED_AT", nullable = false)
 	private LocalDateTime created_at ;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@UpdateTimestamp
+	@Column(name="MODIFIED_AT", nullable = true)
 	private LocalDateTime modified_at;
+	
+	@Column(name="DELETED_AT", nullable = true)
 	private LocalDateTime deleted_at;
 	
 	public Product() {
 		
 	}
 	
-
-
-
-
-
 	public Product(Integer id, String name, String description, String meta_link, String code, byte emphasis,
-			byte control_stock, Double sale_price, Integer quantityAvailable, Brand brand, Supplier supplier,
-			Category category, Loja loja, byte active, LocalDateTime created_at, LocalDateTime modified_at,
+			byte control_stock, Double sale_price, Integer quantityAvailable, byte active,String imgURL , LocalDateTime created_at, LocalDateTime modified_at,
 			LocalDateTime deleted_at) {
+		
 		this.id = id;
 		this.name = name;
 		this.description = description;
@@ -80,14 +103,8 @@ public class Product {
 		this.control_stock = control_stock;
 		this.sale_price = sale_price;
 		this.quantityAvailable = quantityAvailable;
-		this.brand = brand;
-		this.supplier = supplier;
-		this.category = category;
-		this.loja = loja;
 		this.active = active;
-		this.created_at = created_at;
-		this.modified_at = modified_at;
-		this.deleted_at = deleted_at;
+		this.imgURL = imgURL;
 	}
 
 	public Integer getId() {
@@ -106,13 +123,9 @@ public class Product {
 		return name;
 	}
 
-
-
 	public void setName(String name) {
 		this.name = name;
 	}
-
-
 
 	public String getDescription() {
 		return description;
@@ -197,7 +210,7 @@ public class Product {
 	}
 
 
-
+/*
 	public Brand getBrand() {
 		return brand;
 	}
@@ -221,18 +234,11 @@ public class Product {
 	}
 
 
-
-	public Category getCategory() {
-		return category;
+*/
+	
+	public Set<Category> getCategories() {
+		return categories;
 	}
-
-
-
-	public void setCategory(Category category) {
-		this.category = category;
-	}
-
-
 
 	public byte isActive() {
 		return active;
@@ -243,9 +249,16 @@ public class Product {
 	public void setActive(byte active) {
 		this.active = active;
 	}
+	
+	public String getImgURL() {
+			return imgURL;
+		}
+	
+		public void setImgURL(String imgURL) {
+			this.imgURL = imgURL;
+		}
 
-
-
+	/*
 	public Loja getLoja() {
 		return loja;
 	}
@@ -253,7 +266,7 @@ public class Product {
 	public void setLoja(Loja loja) {
 		this.loja = loja;
 	}
-
+*/
 	public byte getActive() {
 		return active;
 	}
