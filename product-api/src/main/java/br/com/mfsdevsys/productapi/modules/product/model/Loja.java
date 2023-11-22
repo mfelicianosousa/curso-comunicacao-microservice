@@ -53,7 +53,7 @@ public class Loja implements Serializable {
 	@Column(name="CEP", length = 9, nullable = true)
 	private String cep;
 	
-	@Column(name="BAIRRO", length = 2, nullable = true)
+	@Column(name="BAIRRO", length = 50, nullable = true)
 	private String bairro;
 	
 	@Column(name="MUNICIPIO", length = 40, nullable = true)

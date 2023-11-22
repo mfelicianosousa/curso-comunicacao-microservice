@@ -56,22 +56,22 @@ public class SupplierService {
 		return new SupplierDTO(entity);
 	}
 	
-	// GetReferenceById
-		@Transactional(readOnly = false)
-		public SupplierDTO update(Integer id, SupplierDTO dto) {
-			try {
-				Supplier entity = repository.getReferenceById( id );
-				
-				entity.setName( dto.getName());
-				entity.setActive(dto.getActive());
-				entity = repository.save(entity);
-				return new SupplierDTO(entity);
-				
-			} catch (EntityNotFoundException e) {
-				// Id not found 
-				throw new ResourceNotFoundException("Id não encontrado "+ id);
-				
-			}
 
+	@Transactional(readOnly = false)
+	public SupplierDTO update(Integer id, SupplierDTO dto) {
+		try {
+			Supplier entity = repository.getReferenceById( id );
+			
+			entity.setName( dto.getName());
+			entity.setActive(dto.getActive());
+			entity = repository.save(entity);
+			return new SupplierDTO(entity);
+			
+		} catch (EntityNotFoundException e) {
+			// Id not found 
+			throw new ResourceNotFoundException("Id não encontrado "+ id);
+			
 		}
+
+	}
 }

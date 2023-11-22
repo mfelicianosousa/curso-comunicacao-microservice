@@ -5,8 +5,9 @@ import java.io.Serializable;
 import br.com.mfsdevsys.productapi.modules.product.model.Loja;
 
 public class LojaDTO implements Serializable {
-	
-	private static final Long serialVersionUID = 1L;
+
+	private static final long serialVersionUID = 1L;
+
 	
 	private Integer id;
 	private String name;
@@ -30,19 +31,46 @@ public class LojaDTO implements Serializable {
 		
 	}
 	
-	public LojaDTO(Integer id, String name, String fantasy, String cnpj, byte active) {
+	
+	public LojaDTO(Integer id, String name, String fantasy, String cnpj, String insc_estadual, String email,
+			String phone, String phone_celular, String cep, String bairro, String municipio, String logradouro,
+			String numero, String complemento, String estado, byte active) {
+		super();
 		this.id = id;
 		this.name = name;
 		this.fantasy = fantasy;
 		this.cnpj = cnpj;
+		this.insc_estadual = insc_estadual;
+		this.email = email;
+		this.phone = phone;
+		this.phone_celular = phone_celular;
+		this.cep = cep;
+		this.bairro = bairro;
+		this.municipio = municipio;
+		this.logradouro = logradouro;
+		this.numero = numero;
+		this.complemento = complemento;
+		this.estado = estado;
 		this.active = active;
 	}
-	
+
+
 	public LojaDTO(Loja entity) {
 		this.id = entity.getId();
 		this.name = entity.getName();
 		this.fantasy = entity.getFantasy();
 		this.cnpj = entity.getCnpj();
+		this.insc_estadual = entity.getInsc_estadual();
+		this.email = entity.getEmail();
+		this.phone = entity.getPhone();
+		this.phone_celular = entity.getPhone_celular();
+		this.cep = entity.getCep();
+		this.bairro = entity.getBairro();
+		this.municipio = entity.getMunicipio();
+		this.logradouro = entity.getLogradouro();
+		this.numero = entity.getNumero();
+		this.complemento = entity.getComplemento();
+		this.estado = entity.getEstado();
 		this.active = entity.getActive();
 	}
 

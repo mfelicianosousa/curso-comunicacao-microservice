@@ -15,6 +15,7 @@ import br.com.mfsdevsys.productapi.modules.product.model.Loja;
 import br.com.mfsdevsys.productapi.modules.product.model.Supplier;
 import br.com.mfsdevsys.productapi.modules.product.repository.LojaRepository;
 import br.com.mfsdevsys.productapi.modules.product.service.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class LojaService {
@@ -46,14 +47,59 @@ public class LojaService {
 	public LojaDTO insert( LojaDTO dto) {
 		
 		Loja entity = new Loja();
-		
+		//
 		entity.setName( dto.getName());
 		entity.setFantasy( dto.getFantasy());
-		entity.setCnpj(dto.getCnpj());
+		entity.setCnpj( dto.getCnpj());
+		entity.setInsc_estadual( dto.getInsc_estadual());
+		entity.setEmail( dto.getEmail());
+		entity.setPhone( dto.getPhone());
+		entity.setPhone_celular( dto.getPhone_celular());
+		entity.setCep( dto.getCep());
+		entity.setBairro( dto.getBairro());
+		entity.setMunicipio( dto.getMunicipio());
+		entity.setLogradouro( dto.getLogradouro());
+		entity.setNumero( dto.getNumero());
+		entity.setComplemento( dto.getComplemento());
+		entity.setEstado( dto.getEstado());
 		entity.setActive( dto.getActive());
-
+		//
 		entity = repository.save(entity);
-		
+		//
 		return new LojaDTO(entity);
+	}
+	
+	@Transactional(readOnly = false)
+	public LojaDTO update(Integer id, LojaDTO dto) {
+		try {
+			
+			Loja entity = repository.getReferenceById( id );
+			//
+			entity.setName( dto.getName());
+			entity.setFantasy( dto.getFantasy());
+			entity.setCnpj( dto.getCnpj());
+			entity.setInsc_estadual( dto.getInsc_estadual());
+			entity.setEmail( dto.getEmail());
+			entity.setPhone( dto.getPhone());
+			entity.setPhone_celular( dto.getPhone_celular());
+			entity.setCep( dto.getCep());
+			entity.setBairro( dto.getBairro());
+			entity.setMunicipio( dto.getMunicipio());
+			entity.setLogradouro( dto.getLogradouro());
+			entity.setNumero( dto.getNumero());
+			entity.setComplemento( dto.getComplemento());
+			entity.setEstado( dto.getEstado());
+			entity.setActive(dto.getActive());
+			//
+			entity = repository.save(entity);
+			//
+			return new LojaDTO(entity);
+			
+		} catch (EntityNotFoundException e) {
+			// Id not found 
+			throw new ResourceNotFoundException("Id não encontrado "+ id);
+			
+		}
+
 	}
 }
