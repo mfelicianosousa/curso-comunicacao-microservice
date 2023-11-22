@@ -9,9 +9,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.mfsdevsys.productapi.modules.product.dto.CategoryMainDTO;
+import br.com.mfsdevsys.productapi.modules.product.dto.SupplierDTO;
 import br.com.mfsdevsys.productapi.modules.product.model.CategoryMain;
+import br.com.mfsdevsys.productapi.modules.product.model.Supplier;
 import br.com.mfsdevsys.productapi.modules.product.repository.CategoryMainRepository;
 import br.com.mfsdevsys.productapi.modules.product.service.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class CategoryMainService {
@@ -45,9 +48,30 @@ public class CategoryMainService {
 		entity.setName( dto.getName());
 		entity.setMeta_link( dto.getMeta_link());
 		entity.setActive( dto.getActive());
-		entity.setDescription("blabla");
+		entity.setDescription( dto.getDescription());
 		entity = repository.save(entity);
 		
 		return new CategoryMainDTO(entity);
+	}
+	
+	@Transactional(readOnly = false)
+	public CategoryMainDTO update(Integer id, CategoryMainDTO dto) {
+		try {
+			CategoryMain entity = repository.getReferenceById( id );
+			//
+			entity.setName( dto.getName());
+			entity.setMeta_link(dto.getMeta_link());
+			entity.setDescription(dto.getDescription());
+			entity.setActive(dto.getActive());
+			entity = repository.save(entity);
+			//
+			return new CategoryMainDTO(entity);
+			
+		} catch (EntityNotFoundException e) {
+			// Id not found 
+			throw new ResourceNotFoundException("Id não encontrado "+ id);
+			
+		}
+
 	}
 }

@@ -11,16 +11,18 @@ public class CategoryMainDTO implements Serializable {
 	private Integer id;
 	private String name;
 	private String meta_link;
+	private String description;
 	private byte active;
 	
 	public CategoryMainDTO() {
 		
 	}
 	
-	public CategoryMainDTO(Integer id, String name, String meta_link, byte active) {
+	public CategoryMainDTO(Integer id, String name, String meta_link, String description,byte active) {
 		this.id = id;
 		this.name = name;
 		this.meta_link = meta_link;
+		this.description = description;
 		this.active = active;
 	}
 	
@@ -29,6 +31,7 @@ public class CategoryMainDTO implements Serializable {
 		this.id = entity.getId();
 		this.name = entity.getName();
 		this.meta_link = entity.getMeta_link();
+		this.description = entity.getDescription();
 		this.active = entity.getActive();
 		
 	}
@@ -55,6 +58,14 @@ public class CategoryMainDTO implements Serializable {
 
 	public void setMeta_link(String meta_link) {
 		this.meta_link = meta_link;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public byte getActive() {
