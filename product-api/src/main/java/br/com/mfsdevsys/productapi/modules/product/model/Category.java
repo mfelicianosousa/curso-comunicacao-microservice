@@ -13,8 +13,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -40,6 +38,8 @@ public class Category {
 	@Column(name="ACTIVE", nullable = false)
 	private byte active;
 	
+	@Column(name="MAIN_ID", nullable= false)
+	private Integer main_id;
 	//@ManyToOne
 	//@JoinColumn(name="MAIN_ID", nullable= false)
 	//private CategoryMain categoryMain;
@@ -51,7 +51,7 @@ public class Category {
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreationTimestamp
-	@Column(name="CREATED_AT", nullable = false)
+	@Column(name="CREATED_AT", nullable = true)
 	private LocalDateTime created_at ;
 	
 	@Temporal(TemporalType.TIMESTAMP)
@@ -155,16 +155,9 @@ public class Category {
 		return created_at;
 	}
 
-	public void setCreated_at(LocalDateTime created_at) {
-		this.created_at = created_at;
-	}
-
+	
 	public LocalDateTime getModified_at() {
 		return modified_at;
-	}
-
-	public void setModified_at(LocalDateTime modified_at) {
-		this.modified_at = modified_at;
 	}
 
 	public LocalDateTime getDeleted_at() {
@@ -174,7 +167,15 @@ public class Category {
 	public void setDeleted_at(LocalDateTime deleted_at) {
 		this.deleted_at = deleted_at;
 	}
+	
+	
 
+	public Integer getMain_id() {
+		return main_id;
+	}
+	public void setMain_id(Integer main_id) {
+		this.main_id = main_id;
+	}
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);

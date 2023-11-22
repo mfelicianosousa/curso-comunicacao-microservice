@@ -2,13 +2,14 @@ package br.com.mfsdevsys.productapi.modules.product.service;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,20 +31,11 @@ public class CategoryService {
 	private CategoryRepository repository;
 	
 	@Transactional(readOnly = true)
-	public List<CategoryDTO> findAll(){
-		List<Category> list = repository.findAll();
-				
-		/* Retornando uma lista
-		 * List<CategoryDTO> listDto = new ArrayList<>();
-		for (Category category : list) {
-			listDto.add(new CategoryDTO(category));
-		}
+	public Page<CategoryDTO> findAllPaged(PageRequest pageRequest){
 		
-		return listDto;
-		*/
-		
-		// função lambada
-		return list.stream().map( x -> new CategoryDTO( x )).collect(Collectors.toList());
+		Page<Category> list = repository.findAll(pageRequest);
+
+		return list.map( x -> new CategoryDTO( x ));
 	}
 	
 	public CategoryDtoResponse save( CategoryDtoRequest request) {
@@ -125,5 +117,7 @@ public class CategoryService {
 		}
 		
 	}
+
+	
 	
 }
