@@ -5,14 +5,15 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.mfsdevsys.productapi.modules.product.dto.CategoryMainDTO;
-import br.com.mfsdevsys.productapi.modules.product.dto.SupplierDTO;
 import br.com.mfsdevsys.productapi.modules.product.model.CategoryMain;
-import br.com.mfsdevsys.productapi.modules.product.model.Supplier;
 import br.com.mfsdevsys.productapi.modules.product.repository.CategoryMainRepository;
+import br.com.mfsdevsys.productapi.modules.product.service.exceptions.DatabaseException;
 import br.com.mfsdevsys.productapi.modules.product.service.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 
@@ -73,5 +74,26 @@ public class CategoryMainService {
 			
 		}
 
+	}
+
+	public void delete(Integer id) {
+		
+		try {
+		
+		   repository.deleteById(id);
+		
+		}  catch (EntityNotFoundException e) {
+			// Id not found 
+			throw new ResourceNotFoundException("Id não encontrado "+ id);
+			
+		} catch (EmptyResultDataAccessException e) {
+			// id not found
+			throw new ResourceNotFoundException("Id não encontrado "+id);
+			
+		} catch (DataIntegrityViolationException e) {
+			// Integrity violation
+			throw new DatabaseException("Violação de Integridade");
+		}
+		
 	}
 }
