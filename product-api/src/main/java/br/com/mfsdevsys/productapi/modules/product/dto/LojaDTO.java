@@ -23,16 +23,19 @@ public class LojaDTO implements Serializable {
 	private String numero;
 	private String complemento;
 	private String estado;
+	private byte active;
+	
 	
 	public LojaDTO() {
 		
 	}
 	
-	public LojaDTO(Integer id, String name, String fantasy, String cnpj) {
+	public LojaDTO(Integer id, String name, String fantasy, String cnpj, byte active) {
 		this.id = id;
 		this.name = name;
 		this.fantasy = fantasy;
 		this.cnpj = cnpj;
+		this.active = active;
 	}
 	
 	public LojaDTO(Loja entity) {
@@ -40,6 +43,7 @@ public class LojaDTO implements Serializable {
 		this.name = entity.getName();
 		this.fantasy = entity.getFantasy();
 		this.cnpj = entity.getCnpj();
+		this.active = entity.getActive();
 	}
 
 	public Integer getId() {
@@ -160,6 +164,13 @@ public class LojaDTO implements Serializable {
 
 	public void setEstado(String estado) {
 		this.estado = estado;
+	}
+	public byte getActive() {
+		return active;
+	}
+
+	public void setActive(byte active) {
+		this.active = active;
 	}
 
 }

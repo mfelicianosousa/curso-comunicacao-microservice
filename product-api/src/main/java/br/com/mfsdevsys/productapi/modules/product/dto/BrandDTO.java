@@ -6,8 +6,7 @@ import br.com.mfsdevsys.productapi.modules.product.model.Brand;
 
 public class BrandDTO implements Serializable {
 	
-	private static final Long serialVersionUID = 1L;
-
+	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private String name;
 	private String meta_link;
@@ -63,7 +62,5 @@ public class BrandDTO implements Serializable {
 	public void setActive(byte active) {
 		this.active = active;
 	}
-	
-	
 	
 }

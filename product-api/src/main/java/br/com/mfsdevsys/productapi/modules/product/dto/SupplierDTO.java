@@ -6,7 +6,7 @@ import br.com.mfsdevsys.productapi.modules.product.model.Supplier;
 
 public class SupplierDTO implements Serializable {
 	
-	private static final Long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	
 	private Integer id;
 	private String name;

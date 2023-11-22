@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,6 +15,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 @Entity
 @Table(name="CATEGORIES_MAIN")
@@ -35,18 +40,28 @@ public class CategoryMain implements Serializable {
 	@Column(name="ACTIVE", nullable = false)
 	private byte active;
 	
-	@ManyToOne
-	@JoinColumn(name="LOJA_ID", nullable= true)
-	private Loja loja;
+	//@ManyToOne
+	//@JoinColumn(name="LOJA_ID", nullable= true)
+	//private Loja loja;
 	
-	
+	@Temporal(TemporalType.TIMESTAMP)
+	@CreationTimestamp
+	@Column(name="CREATED_AT", nullable = false)
 	private LocalDateTime created_at ;
+	
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@UpdateTimestamp
+	@Column(name="MODIFIED_AT", nullable = true)
 	private LocalDateTime modified_at;
+	
+	@Column(name="DELETED_AT", nullable = true)
 	private LocalDateTime deleted_at;
 	
 	public CategoryMain() {
 		
 	}
+	
 	
 	
 	
@@ -60,25 +75,17 @@ public class CategoryMain implements Serializable {
 
 
 
-	public CategoryMain(Integer id, String name, String description, String meta_link, byte active, Loja loja,
+	public CategoryMain(Integer id, String name, String description, String meta_link, byte active,
 			LocalDateTime created_at, LocalDateTime modified_at, LocalDateTime deleted_at) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.meta_link = meta_link;
 		this.active = active;
-		this.loja = loja;
 		this.created_at = created_at;
 		this.modified_at = modified_at;
 		this.deleted_at = deleted_at;
 	}
-
-
-
-
-
-
-
 
 	public Integer getId() {
 		return id;
@@ -136,7 +143,7 @@ public class CategoryMain implements Serializable {
 	}
 
 
-
+/*
 	public Loja getLoja() {
 		return loja;
 	}
@@ -146,7 +153,7 @@ public class CategoryMain implements Serializable {
 		this.loja = loja;
 	}
 
-
+*/
 	public LocalDateTime getCreated_at() {
 		return created_at;
 	}

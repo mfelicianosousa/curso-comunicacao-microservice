@@ -7,21 +7,23 @@ import br.com.mfsdevsys.productapi.modules.product.model.Category;
 
 public class CategoryDTO implements Serializable {
 	
-	private static final Long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	private Integer id;
 	private String name;
 	private String meta_link;
+	private String description;
 	private byte active;
 	
 	public CategoryDTO() {
 		
 	}
 	
-	public CategoryDTO(Integer id, String name, String meta_link, byte active) {
+	public CategoryDTO(Integer id, String name, String meta_link, String description, byte active) {
 		this.id = id;
 		this.name = name;
 		this.meta_link = meta_link;
+		this.description = description;
 		this.active = active;
 	}
 	
@@ -30,6 +32,7 @@ public class CategoryDTO implements Serializable {
 		this.id = entity.getId();
 		this.name = entity.getName();
 		this.meta_link = entity.getMeta_link();
+		this.description = entity.getDescription();
 		this.active = entity.getActive();
 		
 	}
@@ -56,6 +59,14 @@ public class CategoryDTO implements Serializable {
 
 	public void setMeta_link(String meta_link) {
 		this.meta_link = meta_link;
+	}	
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public byte getActive() {

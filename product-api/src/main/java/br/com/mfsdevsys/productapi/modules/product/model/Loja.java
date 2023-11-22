@@ -1,7 +1,11 @@
 package br.com.mfsdevsys.productapi.modules.product.model;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Objects;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,6 +14,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 @Entity
 @Table(name="LOJAS")
@@ -65,6 +71,21 @@ public class Loja implements Serializable {
 	@Column(name="UF", length = 2, nullable = true)
 	private String estado;
 	
+	private byte active;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@CreationTimestamp
+	@Column(name="CREATED_AT", nullable = false)
+	private LocalDateTime created_at ;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@UpdateTimestamp
+	@Column(name="MODIFIED_AT", nullable = true)
+	private LocalDateTime modified_at;
+	
+	@Column(name="DELETED_AT", nullable = true)
+	private LocalDateTime deleted_at;
+	
 	public Loja() {
 		
 	}
@@ -78,7 +99,7 @@ public class Loja implements Serializable {
 
 	public Loja(Integer id, String name, String fantasy, String cnpj, String insc_estadual, String email, String phone,
 			String phone_celular, String cep, String bairro, String municipio, String logradouro, String numero,
-			String complemento, String estado) {
+			String complemento, String estado, byte active) {
 		this.id = id;
 		this.name = name;
 		this.fantasy = fantasy;
@@ -94,6 +115,7 @@ public class Loja implements Serializable {
 		this.numero = numero;
 		this.complemento = complemento;
 		this.estado = estado;
+		this.active = active;
 	}
 
 	public Integer getId() {
@@ -214,6 +236,41 @@ public class Loja implements Serializable {
 
 	public void setEstado(String estado) {
 		this.estado = estado;
+	}
+
+	
+	public byte getActive() {
+		return active;
+	}
+
+	public void setActive(byte active) {
+		this.active = active;
+	}
+	
+	
+
+	public LocalDateTime getCreated_at() {
+		return created_at;
+	}
+
+	public void setCreated_at(LocalDateTime created_at) {
+		this.created_at = created_at;
+	}
+
+	public LocalDateTime getModified_at() {
+		return modified_at;
+	}
+
+	public void setModified_at(LocalDateTime modified_at) {
+		this.modified_at = modified_at;
+	}
+
+	public LocalDateTime getDeleted_at() {
+		return deleted_at;
+	}
+
+	public void setDeleted_at(LocalDateTime deleted_at) {
+		this.deleted_at = deleted_at;
 	}
 
 	@Override
