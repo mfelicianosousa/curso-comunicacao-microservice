@@ -11,10 +11,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.mfsdevsys.productapi.modules.product.dto.BrandDTO;
 import br.com.mfsdevsys.productapi.modules.product.dto.CategoryMainDTO;
+import br.com.mfsdevsys.productapi.modules.product.dto.SupplierDTO;
 import br.com.mfsdevsys.productapi.modules.product.model.Brand;
 import br.com.mfsdevsys.productapi.modules.product.model.CategoryMain;
+import br.com.mfsdevsys.productapi.modules.product.model.Supplier;
 import br.com.mfsdevsys.productapi.modules.product.repository.BrandRepository;
 import br.com.mfsdevsys.productapi.modules.product.service.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class BrandService {
@@ -53,5 +56,24 @@ public class BrandService {
 		entity = repository.save(entity);
 		
 		return new BrandDTO(entity);
+	}
+	
+	@Transactional(readOnly = false)
+	public BrandDTO update(Integer id, BrandDTO dto) {
+		try {
+			Brand entity = repository.getReferenceById( id );
+			
+			entity.setName( dto.getName());
+			entity.setMeta_link( dto.getMeta_link());
+			entity.setActive( dto.getActive());
+			entity = repository.save(entity);
+			return new BrandDTO(entity);
+			
+		} catch (EntityNotFoundException e) {
+			// Id not found 
+			throw new ResourceNotFoundException("Id não encontrado "+ id);
+			
+		}
+
 	}
 }
