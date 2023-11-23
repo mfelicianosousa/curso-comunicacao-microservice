@@ -44,9 +44,13 @@ public class Product implements Serializable {
 	private String code;
 	
 	private byte emphasis ;
+	
+	@Column(name="CONTROL_STOCK", nullable = false)
 	private byte control_stock;
 	private Double sale_price;
 	private Integer quantityAvailable;
+	
+	@Column(name="IMG_URL", nullable = false)
 	private String imgURL;
 	private byte active;
 	/*
@@ -106,6 +110,7 @@ public class Product implements Serializable {
 		this.active = active;
 		this.imgURL = imgURL;
 	}
+
 
 	public Integer getId() {
 		return id;
