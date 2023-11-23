@@ -10,8 +10,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.mfsdevsys.productapi.modules.product.dto.CategoryDTO;
 import br.com.mfsdevsys.productapi.modules.product.dto.ProductDTO;
+import br.com.mfsdevsys.productapi.modules.product.model.Category;
 import br.com.mfsdevsys.productapi.modules.product.model.Product;
+import br.com.mfsdevsys.productapi.modules.product.repository.CategoryRepository;
 import br.com.mfsdevsys.productapi.modules.product.repository.ProductRepository;
 import br.com.mfsdevsys.productapi.modules.product.service.exceptions.DatabaseException;
 import br.com.mfsdevsys.productapi.modules.product.service.exceptions.ResourceNotFoundException;
@@ -23,6 +26,9 @@ public class ProductService {
 	
 	@Autowired
 	private ProductRepository repository;
+	
+	@Autowired
+	private CategoryRepository categoryRepository;
 	
 	@Transactional(readOnly = true)
 	public Page<ProductDTO> findAllPaged(PageRequest pageRequest){
@@ -47,11 +53,7 @@ public class ProductService {
 	public ProductDTO insert( ProductDTO dto) {
 		
 		Product entity = new Product();
-		
-		//entity.setName( dto.getName());
-		//entity.setMeta_link( dto.getMeta_link());
-		//entity.setDescription( dto.getDescription());
-		//entity.setActive( dto.getActive());
+		copyDtoToEntity(dto, entity);
 
 		entity = repository.save(entity);
 		
@@ -63,7 +65,7 @@ public class ProductService {
 	public ProductDTO update(Integer id, ProductDTO dto) {
 		try {
 			Product entity = repository.getReferenceById( id );
-			
+			copyDtoToEntity(dto, entity);
 			//entity.setName( dto.getName());
 			//entity.setDescription(dto.getDescription());
 			//entity.setMeta_link(dto.getMeta_link());
@@ -79,6 +81,9 @@ public class ProductService {
 
 	}
 	
+	
+
+
 	public void delete(Integer id) {
 		
 		try {
@@ -95,6 +100,30 @@ public class ProductService {
 		}
 		
 	}
+	
+	
+	private void copyDtoToEntity(ProductDTO dto, Product entity) {
+		
+		entity.setName( dto.getName());
+		entity.setMeta_link( dto.getMeta_link());
+		entity.setDescription( dto.getDescription());
+		entity.setCode( dto.getCode());
+		entity.setEmphasis(dto.getEmphasis());
+		entity.setControl_stock(dto.getControl_stock());
+		entity.setSale_price(dto.getSale_price());
+		entity.setQuantityAvailable( dto.getQuantityAvailable());
+		entity.setImgURL(dto.getImgURL());
+		entity.setActive( dto.getActive());
+		
+		entity.getCategories().clear();
+		for (CategoryDTO categoryDTO: dto.getCategories()) {
+			
+			Category category = categoryRepository.getReferenceById(categoryDTO.getId());
+			
+			entity.getCategories().add(category);
+		}
+	}
+
 
 	
 	
