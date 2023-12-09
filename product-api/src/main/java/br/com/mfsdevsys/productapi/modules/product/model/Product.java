@@ -9,20 +9,29 @@ import java.util.Set;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import br.com.mfsdevsys.productapi.modules.category.model.Category;
+import br.com.mfsdevsys.productapi.modules.category.model.CategoryMain;
+import br.com.mfsdevsys.productapi.modules.product.dto.ProductRequest;
+import br.com.mfsdevsys.productapi.modules.product.dto.ProductResponse;
+import br.com.mfsdevsys.productapi.modules.supplier.dto.SupplierResponse;
+import br.com.mfsdevsys.productapi.modules.supplier.model.Supplier;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 
 @Entity
-@Table(name="PRODUCT")
+@Table(name="product")
 public class Product implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -31,36 +40,40 @@ public class Product implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Integer id;
 	
-	@Column(name="NAME", nullable = false)
+	@Column(name="name", nullable = false)
 	private String name;
 	
-	@Column(name="DESCRIPTION", columnDefinition="TEXT", nullable = true)
+	@Column(name="description", columnDefinition="TEXT", nullable = true)
 	private String description;
 	
-	@Column(name="META_LINK", nullable = false)
-	private String meta_link;
+	@Column(name="meta_link", nullable = false)
+	private String metaLink;
 	
-	@Column(name="CODE", nullable = false)
+	@Column(name="code", nullable = false)
 	private String code;
 	
 	private byte emphasis ;
 	
-	@Column(name="CONTROL_STOCK", nullable = false)
-	private byte control_stock;
-	private Double sale_price;
+	@Column(name="control_stock", nullable = false)
+	private byte controlStock;
+	
+	@Column(name="sale_price")
+	private Double salePrice;
+	
+	@Column(name="quantity_available")
 	private Integer quantityAvailable;
 	
-	@Column(name="IMG_URL", nullable = false)
+	@Column(name="img_url", nullable = false)
 	private String imgURL;
 	private byte active;
+	
+	
 	/*
 	@ManyToOne
 	@JoinColumn(name="BRAND_ID", nullable= false)
 	private Brand brand;
 	
-	@ManyToOne
-	@JoinColumn(name="SUPPLIER_ID", nullable= false)
-	private Supplier supplier;
+	
 	
 	@ManyToOne
 	@JoinColumn(name="LOJA_ID", nullable= true)
@@ -71,58 +84,101 @@ public class Product implements Serializable {
 	
 	//, columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")	
 	
+	@ManyToOne
+	@JoinColumn(name="supplier_id", nullable = false,  foreignKey = @ForeignKey(name = "fk_supplier"))
+	private Supplier supplier;
+	
+	@ManyToOne
+	@JoinColumn(name="category_id", nullable = false,  foreignKey = @ForeignKey(name = "fk_category"))
+	private Category category;
+	
+
 	@ManyToMany
-	@JoinTable(name = "PRODUCT_CATEGORY", 
-	  joinColumns = @JoinColumn(name="product_id"),
-	  inverseJoinColumns = @JoinColumn(name="category_id"))
+	@JoinTable(name = "product_category", 
+	  joinColumns = {@JoinColumn( 
+			            foreignKey = @ForeignKey(name = "fk_product"),
+	                    referencedColumnName="id",
+	                    name="product_id")},
+	  
+	  inverseJoinColumns = {@JoinColumn(
+			                  foreignKey = @ForeignKey(name = "fk_category"),
+                              referencedColumnName="id",
+                	           name="category_id")
+	  })
 	Set<Category> categories = new HashSet<>();	
 	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreationTimestamp
-	@Column(name="CREATED_AT", nullable = false)
-	private LocalDateTime created_at ;
+	@Column(name="created_at", nullable = false, updatable = false)
+	private LocalDateTime createdAt ;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@UpdateTimestamp
-	@Column(name="MODIFIED_AT", nullable = true)
-	private LocalDateTime modified_at;
+	@Column(name="modified_at", nullable = true, updatable = true)
+	private LocalDateTime modifiedAt;
 	
-	@Column(name="DELETED_AT", nullable = true)
-	private LocalDateTime deleted_at;
+	@PrePersist
+	public void prePersist() {
+		createdAt = LocalDateTime.now();
+	}
 	
 	public Product() {
 		
 	}
 	
-	public Product(Integer id, String name, String description, String meta_link, String code, byte emphasis,
-			byte control_stock, Double sale_price, Integer quantityAvailable, byte active,String imgURL , LocalDateTime created_at, LocalDateTime modified_at,
-			LocalDateTime deleted_at) {
-		
+	public Product(Integer id, String name, String description, String metaLink, String code, byte emphasis,
+			byte controlStock, Double salePrice, Integer quantityAvailable, String imgURL, byte active,
+			Supplier supplier, Category category, LocalDateTime createdAt, LocalDateTime modifiedAt) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
-		this.meta_link = meta_link;
+		this.metaLink = metaLink;
 		this.code = code;
 		this.emphasis = emphasis;
-		this.control_stock = control_stock;
-		this.sale_price = sale_price;
+		this.controlStock = controlStock;
+		this.salePrice = salePrice;
 		this.quantityAvailable = quantityAvailable;
-		this.active = active;
 		this.imgURL = imgURL;
+		this.active = active;
+		this.supplier = supplier;
+		this.category = category;
+		this.createdAt = createdAt;
+		this.modifiedAt = modifiedAt;
 	}
+	
+	public static Product of(ProductRequest request,
+			Supplier supplier,
+			Category category) {
+		
+		Product product = new Product();
 
+        product.setName(request.getName());
+        product.setDescription(request.getDescription());
+        product.setMetaLink(request.getMetaLink());
+        product.setCode(request.getCode());
+        product.setEmphasis(request.getEmphasis());
+        product.setControlStock(request.getControlStock());
+        product.setSalePrice(request.getSalePrice());
+        product.setQuantityAvailable(request.getQuantityAvailable());
+        product.setImgURL(request.getImgURL());
+        product.setActive(request.getActive());
+        product.setCreatedAt(request.getCreatedAt());
+        product.setModifiedAt(request.getModifiedAt());
+        product.setSupplier( supplier);
+        product.setCategory( category) ;
+   
+        return product;
+		
+	}
 
 	public Integer getId() {
 		return id;
 	}
 
-
-
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
-
 
 	public String getName() {
 		return name;
@@ -136,180 +192,109 @@ public class Product implements Serializable {
 		return description;
 	}
 
-
-
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
-
-
-	public String getMeta_link() {
-		return meta_link;
+	public String getMetaLink() {
+		return metaLink;
 	}
 
-
-
-	public void setMeta_link(String meta_link) {
-		this.meta_link = meta_link;
+	public void setMetaLink(String metaLink) {
+		this.metaLink = metaLink;
 	}
-
-
 
 	public String getCode() {
 		return code;
 	}
 
-
-
 	public void setCode(String code) {
 		this.code = code;
 	}
-
-
 
 	public byte getEmphasis() {
 		return emphasis;
 	}
 
-
-
 	public void setEmphasis(byte emphasis) {
 		this.emphasis = emphasis;
 	}
 
-
-
-	public byte getControl_stock() {
-		return control_stock;
+	public byte getControlStock() {
+		return controlStock;
 	}
 
-
-
-	public void setControl_stock(byte control_stock) {
-		this.control_stock = control_stock;
+	public void setControlStock(byte controlStock) {
+		this.controlStock = controlStock;
 	}
 
-
-
-	public Double getSale_price() {
-		return sale_price;
+	public Double getSalePrice() {
+		return salePrice;
 	}
 
-
-
-	public void setSale_price(Double sale_price) {
-		this.sale_price = sale_price;
+	public void setSalePrice(Double salePrice) {
+		this.salePrice = salePrice;
 	}
-
-
 
 	public Integer getQuantityAvailable() {
 		return quantityAvailable;
 	}
 
-
-
 	public void setQuantityAvailable(Integer quantityAvailable) {
 		this.quantityAvailable = quantityAvailable;
 	}
 
-
-/*
-	public Brand getBrand() {
-		return brand;
+	public String getImgURL() {
+		return imgURL;
 	}
 
-
-
-	public void setBrand(Brand brand) {
-		this.brand = brand;
+	public void setImgURL(String imgURL) {
+		this.imgURL = imgURL;
 	}
 
+	public byte getActive() {
+		return active;
+	}
 
+	public void setActive(byte active) {
+		this.active = active;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public LocalDateTime getModifiedAt() {
+		return modifiedAt;
+	}
+
+	public void setModifiedAt(LocalDateTime modifiedAt) {
+		this.modifiedAt = modifiedAt;
+	}
 
 	public Supplier getSupplier() {
 		return supplier;
 	}
 
-
-
 	public void setSupplier(Supplier supplier) {
 		this.supplier = supplier;
 	}
-
-
-*/
+	
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+	
+	public Category getCategory() {
+		return category;
+	}
 	
 	public Set<Category> getCategories() {
 		return categories;
 	}
-
-	public byte isActive() {
-		return active;
-	}
-
-
-
-	public void setActive(byte active) {
-		this.active = active;
-	}
-	
-	public String getImgURL() {
-			return imgURL;
-		}
-	
-		public void setImgURL(String imgURL) {
-			this.imgURL = imgURL;
-		}
-
-	/*
-	public Loja getLoja() {
-		return loja;
-	}
-
-	public void setLoja(Loja loja) {
-		this.loja = loja;
-	}
-*/
-	public byte getActive() {
-		return active;
-	}
-
-	public LocalDateTime getCreated_at() {
-		return created_at;
-	}
-
-
-
-	public void setCreated_at(LocalDateTime created_at) {
-		this.created_at = created_at;
-	}
-
-
-
-	public LocalDateTime getModified_at() {
-		return modified_at;
-	}
-
-
-
-	public void setModified_at(LocalDateTime modified_at) {
-		this.modified_at = modified_at;
-	}
-
-
-
-	public LocalDateTime getDeleted_at() {
-		return deleted_at;
-	}
-
-	public void setDeleted_at(LocalDateTime deleted_at) {
-		this.deleted_at = deleted_at;
-	}
-
-	
-
 
 	@Override
 	public int hashCode() {

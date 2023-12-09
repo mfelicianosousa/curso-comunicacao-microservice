@@ -21,12 +21,12 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import br.com.mfsdevsys.productapi.modules.product.dto.ProductDTO;
 import br.com.mfsdevsys.productapi.modules.product.service.ProductService;
 
-@RestController
-@RequestMapping(value = "api/products")
+//@RestController
+//@RequestMapping(value = "api/products")
 public class ProductResource {
 
-	@Autowired
-	private ProductService service;
+//	@Autowired
+//	private ProductService service;
 	
 	/*  Moock
 	@GetMapping
@@ -56,6 +56,9 @@ public class ProductResource {
 		
 	};
 	*/
+	
+	
+	/*
 
 	@GetMapping
 	public ResponseEntity< Page< ProductDTO >> findAll(
@@ -106,4 +109,6 @@ public class ProductResource {
 		service.delete(id) ;
 		return ResponseEntity.noContent().build();
 	}
+	
+	*/
 }
